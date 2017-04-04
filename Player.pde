@@ -18,7 +18,11 @@ class Player {
     controller.set_leds(255, 255, 255);
     controller.update_leds();
     
-    while (tracker_.enable(controller) != Status.Tracker_CALIBRATED);
+    while (tracker_.enable(controller) != Status.Tracker_CALIBRATED) {
+    
+      // Just wait
+      
+    }
     
     trigger = 0;
     isPainting = false;
@@ -30,9 +34,10 @@ class Player {
     pos = new PVector(0,0);
     
     colores = new color[3];
-    colores[0] = color(255, 0, 0);
-    colores[1] = color(0, 255, 0);
-    colores[2] = color(0, 0, 255);
+    float alpha = 255;
+    colores[0] = color(255, 0, 0, alpha);
+    colores[1] = color(0, 255, 0, alpha);
+    colores[2] = color(0, 0, 255, alpha);
     colorIndex = 0;
     deletePath = false;
     
@@ -81,7 +86,8 @@ class Player {
     if ((isPainting) && (trigger > 0)) {
     
       audioLines.get(audioLines.size() - 1).addPoint(pos);
-      particles.add(new Particle(pos));
+      
+      for (int i = 0; i < 10; i++) particles.add(new Particle(pos));
       
     }
     
@@ -111,12 +117,10 @@ class Player {
   void display(PGraphics canvas) {
   
 
-    canvas.beginDraw();
-    canvas.noFill();
-    canvas.stroke(255);
-    canvas.strokeWeight(3);
-    canvas.ellipse(pos.x, pos.y, 30, 30);
-    canvas.endDraw();
+    //canvas.noFill();
+    //canvas.stroke(255);
+    //canvas.strokeWeight(3);
+    //canvas.ellipse(pos.x, pos.y, 30, 30);
     
     for (int i = 0; i < audioLines.size(); i++) {
     
