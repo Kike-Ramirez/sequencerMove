@@ -35,7 +35,7 @@ class AudioLine {
     
     else if (colorIndex == 1) {
     
-      float longitud = map(1, 0, baseAudio.duration() * 4, 0, width);
+      float longitud = map(0.5, 0, baseAudio.duration() * 4, 0, width);
       
       float resto = point.x % int(longitud);
       
@@ -53,7 +53,7 @@ class AudioLine {
 
     else if (colorIndex == 2) {
     
-      float longitud = map(0.5, 0, baseAudio.duration() * 4, 0, width);
+      float longitud = map(0.3, 0, baseAudio.duration() * 4, 0, width);
       
       float resto = point.x % int(longitud);
       
@@ -100,7 +100,7 @@ class AudioLine {
     
     else if (colorIndex == 1) {
     
-      float longitud = map(1, 0, baseAudio.duration() * 4, 0, width);
+      float longitud = map(0.5, 0, baseAudio.duration() * 4, 0, width);
       
       for (int i = 0; i < path.size(); i++) {
       
@@ -113,7 +113,7 @@ class AudioLine {
     
     else {
       
-      float longitud = map(0.5, 0, baseAudio.duration() * 4, 0, width);
+      float longitud = map(0.3, 0, baseAudio.duration() * 4, 0, width);
       
       for (int i = 0; i < path.size(); i++) {
       

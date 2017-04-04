@@ -94,11 +94,6 @@ class Player {
       
     }
     
-    else if ((isPainting) && (trigger == 0)) {
-    
-      isPainting = false;
-    
-    }
     
     else if ((!isPainting) && (trigger > 0)) {
     
@@ -106,6 +101,12 @@ class Player {
       audioLines.get(audioLines.size() - 1).addPoint(pos);
       isPainting = true;
       
+    }
+    
+    else if (trigger == 0) {
+    
+      isPainting = false;
+    
     }
     
     for (int i = 0; i < particles.size(); i++) {

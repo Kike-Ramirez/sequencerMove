@@ -42,8 +42,8 @@ byte [] pixels;
 
 void setup() {
   
-  size(1024, 768, P2D);
-  //fullScreen(P2D, 2);
+  // size(1024, 768, P2D);
+  fullScreen(P2D, 2);
   
   int connected = psmoveapi.count_connected();
 
@@ -91,24 +91,33 @@ void setup() {
   for (int i = 0; i < 12; i++) {
   
     String pianoPath = "piano_" + i + ".wav";
-    println(pianoPath);
     pianos.add(new SoundFile(this, pianoPath));
   
   }
+
+  for (int i = 0; i < 12; i++) pianos.get(i).amp(0.2);
+  
 
   pizzicatos = new ArrayList<SoundFile>();
   
   for (int i = 0; i < 7; i++) {
   
     String pizzicatoPath = "pizzicato_" + i + ".wav";
-    println(pizzicatoPath);
     pizzicatos.add(new SoundFile(this, pizzicatoPath));
   
   }
-  
+
+  for (int i = 0; i < 7; i++) pizzicatos.get(i).amp(0.3);
+
+  baseAudio.amp(0.6);
   baseAudio.play();
   baseAudio.stop();
   baseAudio.loop();
+  
+  roland.amp(0);
+  roland.play();
+  roland.stop();
+  roland.loop();
   
   sequencer = new Sequencer(baseAudio.duration() * 4);
   
@@ -152,7 +161,8 @@ void draw() {
   
   canvas.beginDraw();
   canvas.background(0);
-  println(sequencer.getPosition());
+  
+  boolean crossRoland = false;
 
   for (int i = 0; i < players.length; i++) {
  
@@ -176,14 +186,14 @@ void draw() {
         
         else if (players[i].audioLines.get(j).colorIndex == 1) { 
           
-          float longitud = map(1, 0, baseAudio.duration() * 4, 0, width);
+          float longitud = map(0.5, 0, baseAudio.duration() * 4, 0, width);
           crossPoint = intersect(pointOne.x, pointOne.y, pointOne.x + longitud, pointOne.y, sequencer.getPosition(), 0, sequencer.getPosition(), height);
           
         }
 
         else if (players[i].audioLines.get(j).colorIndex == 2) { 
           
-          float longitud = map(0.5, 0, baseAudio.duration() * 4, 0, width);
+          float longitud = map(0.3, 0, baseAudio.duration() * 4, 0, width);
           crossPoint = intersect(pointOne.x, pointOne.y, pointOne.x + longitud, pointOne.y, sequencer.getPosition(), 0, sequencer.getPosition(), height);
           
         }
@@ -196,7 +206,15 @@ void draw() {
           canvas.ellipse(crossPoint.x, crossPoint.y, 16, 16);
           
           for(int l = 0; l < 5; l++) sparks.add(new Particle(crossPoint, 3));
+
+          if (players[i].audioLines.get(j).colorIndex == 0) {
           
+            roland.amp(0.9);
+            roland.rate(map(crossPoint.y, 0, height, 0.25, 4.0));
+            crossRoland = true;
+          
+          }
+                    
           if ((abs(crossPoint.x - pointOne.x) < 3) && (players[i].audioLines.get(j).colorIndex == 1)) {
           
             int soundIndex = int(map(crossPoint.y, 0, height, 0, 12));
@@ -211,11 +229,14 @@ void draw() {
           
           }
         }
+        
       }
     
     }
     
   }
+  
+  if (!crossRoland) roland.amp(0);
   
   sequencer.update();
   sequencer.display(canvas);
@@ -354,4 +375,11 @@ PVector intersect(float x1, float y1, float x2, float y2, float x3, float y3, fl
 boolean same_sign(float a, float b){
 
   return (( a * b) >= 0);
+}
+
+void mousePressed() {
+
+  pianos.get(0).amp(map(mouseY, 0, height, 0.02, 1.0));
+  pianos.get(0).play();
+
 }
