@@ -1,3 +1,5 @@
+import processing.sound.*;
+
 // Import openCV package
 import gab.opencv.*;
 
@@ -9,6 +11,7 @@ import io.thp.psmove.*;
 // Tracker and controller handles
 PSMoveTracker tracker;
 Player [] players; // Define an array of controllers
+Sequencer sequencer;
 
 PGraphics canvas;
 PGraphics brightPass;
@@ -19,6 +22,8 @@ PShader bloomFilter;
 PShader blurFilter;
 
 PImage outputImage;
+
+SoundFile baseAudio;
 
 
 
@@ -72,6 +77,14 @@ void setup() {
 
   bloomFilter = loadShader("bloomFrag.glsl");
   blurFilter = loadShader("blurFrag.glsl");
+  
+  baseAudio = new SoundFile(this, "full_bass.wav");
+  
+  baseAudio.play();
+  baseAudio.stop();
+  baseAudio.loop();
+  
+  sequencer = new Sequencer(baseAudio.duration() * 4);
     
 }
 
@@ -115,6 +128,9 @@ void draw() {
     players[i].display(canvas);
     
   }
+  
+  sequencer.update();
+  sequencer.display(canvas);
 
   canvas.endDraw();
   
