@@ -1,3 +1,5 @@
+import deadpixel.keystone.*;
+
 import processing.sound.*;
 
 // Import openCV package
@@ -17,6 +19,11 @@ PGraphics canvas;
 PGraphics brightPass;
 PGraphics horizontalBlurPass;
 PGraphics verticalBlurPass;
+
+Keystone ks;
+CornerPinSurface surface;
+
+PGraphics offscreen;
 
 PShader bloomFilter;
 PShader blurFilter;
@@ -42,8 +49,18 @@ byte [] pixels;
 
 void setup() {
   
-  // size(1024, 768, P2D);
-  fullScreen(P2D, 2);
+  // size(1024, 768, P3D);
+  fullScreen(P3D, 2);
+  
+  ks = new Keystone(this);
+  surface = ks.createCornerPinSurface(width, height, 20);
+  
+  // We need an offscreen buffer to draw the surface we
+  // want projected
+  // note that we're matching the resolution of the
+  // CornerPinSurface.
+  // (The offscreen buffer can be P2D or P3D)
+  offscreen = createGraphics(width, height, P2D);
   
   int connected = psmoveapi.count_connected();
 
@@ -128,6 +145,9 @@ void setup() {
 }
 
 void draw() {
+  
+  PVector surfaceMouse = surface.getTransformedMouse();
+
   tracker.update_image();
   tracker.update();
 
@@ -276,21 +296,28 @@ void draw() {
   verticalBlurPass.image(horizontalBlurPass, 0, 0);
   verticalBlurPass.endDraw();
 
-  // draw 
-  image(img, 0, 0, width, height); // Display the tracker image in the sketch window
-  blendMode(ADD);
-  image(canvas, 0, 0);
-  image(verticalBlurPass, 0, 0);
-  blendMode(BLEND);
+  offscreen.beginDraw();
 
+  // draw 
+  offscreen.image(img, 0, 0, width, height); // Display the tracker image in the sketch window
+  offscreen.blendMode(ADD);
+  offscreen.image(canvas, 0, 0);
+  offscreen.image(verticalBlurPass, 0, 0);
+  //offscreen.blendMode(BLEND);
     
-  fill(255);
-  textSize(16);
-  text("Fullsix Innovation Dept. \nPSMove tests\n15/3/2017 \n " + frameRate + "\n Trigger: " + players[0].trigger, 40, 40);
+  offscreen.fill(255);
+  offscreen.textSize(16);
+  offscreen.text("Fullsix Innovation Dept. \nPSMove tests\n15/3/2017 \n " + frameRate + "\n Trigger: " + players[0].trigger, 40, 40);
   
-  blendMode(NORMAL);
-  image(visaBanner, 0, 0, width, height);
+  offscreen.blendMode(NORMAL);
+  offscreen.image(visaBanner, 0, 0, width, height);
   
+  offscreen.endDraw();
+  
+  background(0);
+  
+  surface.render(offscreen);
+
   
 }
 
@@ -382,4 +409,24 @@ void mousePressed() {
   pianos.get(0).amp(map(mouseY, 0, height, 0.02, 1.0));
   pianos.get(0).play();
 
+}
+
+void keyPressed() {
+  switch(key) {
+  case 'c':
+    // enter/leave calibration mode, where surfaces can be warped 
+    // and moved
+    ks.toggleCalibration();
+    break;
+
+  case 'l':
+    // loads the saved layout
+    ks.load();
+    break;
+
+  case 's':
+    // saves the layout
+    ks.save();
+    break;
+  }
 }

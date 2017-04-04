@@ -121,10 +121,8 @@ class Player {
   void display(PGraphics canvas) {
   
 
-    //canvas.noFill();
-    //canvas.stroke(255);
-    //canvas.strokeWeight(3);
-    //canvas.ellipse(pos.x, pos.y, 30, 30);
+    canvas.fill(255, 255, 0);
+    canvas.ellipse(pos.x, pos.y, 5, 5);
     
     for (int i = 0; i < audioLines.size(); i++) {
     
