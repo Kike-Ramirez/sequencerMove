@@ -35,9 +35,9 @@ class Player {
     
     colores = new color[3];
     float alpha = 255;
-    colores[0] = color(255, 0, 0, alpha);
-    colores[1] = color(0, 255, 0, alpha);
-    colores[2] = color(0, 0, 255, alpha);
+    colores[0] = color(26, 11, 113, alpha);
+    colores[1] = color(247, 182, 0, alpha);
+    colores[2] = color(255, 255, 255, alpha);
     colorIndex = 0;
     deletePath = false;
     
@@ -85,11 +85,12 @@ class Player {
     
     if ((isPainting) && (trigger > 0)) {
     
+      // COMPROBAR!!
       audioLines.get(audioLines.size() - 1).addPoint(pos);
       
       float numParticles = map(trigger, 0, 255, 0, 50);
       
-      for (int i = 0; i < numParticles; i++) particles.add(new Particle(pos));
+      for (int i = 0; i < numParticles; i++) particles.add(new Particle(pos, colorIndex));
       
     }
     
@@ -101,7 +102,7 @@ class Player {
     
     else if ((!isPainting) && (trigger > 0)) {
     
-      audioLines.add(new AudioLine(colores[colorIndex]));
+      audioLines.add(new AudioLine(colorIndex));
       audioLines.get(audioLines.size() - 1).addPoint(pos);
       isPainting = true;
       
@@ -142,7 +143,6 @@ class Player {
     
     }
     
-    println(particles.size());
   
   }
   

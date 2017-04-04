@@ -23,7 +23,7 @@ class Sequencer {
   void display(PGraphics canvas) {
   
     canvas.noFill();
-    canvas.stroke(#FFE600);
+    canvas.stroke(239, 132, 0);
     canvas.strokeWeight(3);
     canvas.line(xPos, 0, xPos, height);
   
