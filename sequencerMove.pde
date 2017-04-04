@@ -30,7 +30,9 @@ PImage img;
 byte [] pixels;
 
 void setup() {
-  size(640, 480, P2D);
+  
+  //size(1920, 1080, P2D);
+  fullScreen(P2D, 2);
   
   int connected = psmoveapi.count_connected();
 
@@ -146,7 +148,7 @@ void draw() {
     
   fill(255);
   textSize(16);
-  text("Fullsix Innovation Dept. \nPSMove tests\n15/3/2017 \n " + frameRate, 40, 40);
+  text("Fullsix Innovation Dept. \nPSMove tests\n15/3/2017 \n " + frameRate + "\n Trigger: " + players[0].trigger, 40, 40);
   
   
 }

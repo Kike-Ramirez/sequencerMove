@@ -53,7 +53,7 @@ class Player {
     float[] r = new float[1];
     
     tracker_.get_position(controller, x, y, r);
-    pos  = new PVector(x[0], y[0]);
+    pos  = new PVector(x[0] * width / 640.0, y[0] * height / 480.0);
     
     while (controller.poll() != 0) {
       int buttons = controller.get_buttons();
@@ -87,7 +87,9 @@ class Player {
     
       audioLines.get(audioLines.size() - 1).addPoint(pos);
       
-      for (int i = 0; i < 10; i++) particles.add(new Particle(pos));
+      float numParticles = map(trigger, 0, 255, 0, 50);
+      
+      for (int i = 0; i < numParticles; i++) particles.add(new Particle(pos));
       
     }
     
